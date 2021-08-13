@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TaKudanAR.Views.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TaKudanAR.ViewModels"
+    Title="{Binding Title, Mode=OneTime}">
+
+    <ContentPage.BindingContext>
+        <vm:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource Primary}" />
+            <Setter Property="TextColor" Value="White" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackLayout
+            Padding="30,20"
+            Orientation="Vertical"
+            Spacing="10">
+
+            <Label FontSize="Title" Text="KudanAR Sample" />
+
+            <!--<Label
+                Padding="0,0,0,0"
+                FontSize="16"
+                Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" />-->
+
+            <Label Padding="0,10" FontSize="Large">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <FormattedString.Spans>
+                            <Span FontAttributes="Bold" Text="https://github.com/hsytkm/XFKudanARDemo" />
+                        </FormattedString.Spans>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </StackLayout>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,*">
+            <StackLayout>
+                <Label
+                    Margin="0,10,0,0"
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    HorizontalTextAlignment="Center"
+                    Text="Select Node Image" />
+
+                <CarouselView
+                    CurrentItem="{Binding SelectedNodeImageSource.Value, Mode=TwoWay}"
+                    IndicatorView="indicatorView"
+                    ItemsSource="{Binding NodeImageSources, Mode=OneTime}">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding ImageSource, Mode=OneTime}" />
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+
+                <IndicatorView
+                    x:Name="indicatorView"
+                    Margin="0,0,0,20"
+                    HorizontalOptions="Center"
+                    IndicatorColor="LightGray"
+                    SelectedIndicatorColor="DarkGray" />
+            </StackLayout>
+
+            <StackLayout Grid.Column="1">
+                <Button Command="{Binding TakeMarkerPhotoCommand, Mode=OneTime}" Text="Take marker photo" />
+                <Image Source="{Binding MarkerImageSource.Value}" VerticalOptions="CenterAndExpand" />
+            </StackLayout>
+        </Grid>
+
+        <Button
+            Grid.Row="2"
+            Command="{Binding StartMarkerArCommand, Mode=OneTime}"
+            HeightRequest="60"
+            Text="Start Marker AR" />
+    </Grid>
+
+</ContentPage>
