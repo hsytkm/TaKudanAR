@@ -36,7 +36,25 @@ namespace TaKudanAR.Droid
             if (!isGranted)
                 return;
 
-            MainActivity.Instance?.StartARActivity<MarkerARActivity>(marker, node);
+            MainActivity.Instance?.StartMarkerARActivity(marker, node);
+        }
+
+        public async Task StartMarkerlessARFloorActivityAsync(IKudanImageSource node)
+        {
+            var isGranted = await Smapho.CheckAndRequestPermissionsAsync(_kudanARPermissions);
+            if (!isGranted)
+                return;
+
+            MainActivity.Instance?.StartMarkerlessARActivity<MarkerlessARFloorActivity>(node);
+        }
+
+        public async Task StartMarkerlessARWallActivityAsync(IKudanImageSource node)
+        {
+            var isGranted = await Smapho.CheckAndRequestPermissionsAsync(_kudanARPermissions);
+            if (!isGranted)
+                return;
+
+            MainActivity.Instance?.StartMarkerlessARActivity<MarkerlessARWallActivity>(node);
         }
 
     }

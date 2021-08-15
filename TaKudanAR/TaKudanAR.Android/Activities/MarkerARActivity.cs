@@ -7,16 +7,19 @@ using Android.Views;
 using Android.Widget;
 using EU.Kudan.Kudan;
 using System;
+using TaKudanAR.Droid.Extensions;
 using TaKudanAR.Interfaces;
 using TaKudanAR.Models;
 
 // see also https://github.com/XLsoft-Corporation/Public-Samples-Android/blob/master/app/src/main/java/com/xlsoft/publicsamples/MarkerActivity.java
 namespace TaKudanAR.Droid.Activities
 {
-    [Activity(Label = "MarkerARActivity")]
+    [Activity(Label = "MarkerAR")]
     public class MarkerARActivity : ARActivityBase
     {
-        private ARImageTrackable? _imageTrackable;
+        internal const string MARKER_IMAGE_KEY = nameof(MARKER_IMAGE_KEY);
+        internal const string MARKER_ASSET_FLAG_KEY = nameof(MARKER_ASSET_FLAG_KEY);
+        private IKudanImageSource? _markerImageSource;
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
@@ -24,7 +27,7 @@ namespace TaKudanAR.Droid.Activities
 
             ARAPIKey.Instance.SetAPIKey(KudanLicense.Key);
 
-            _markerImageSource = GetMarkerImageSource(Intent);
+            _markerImageSource = GetKudanImageSource(Intent, MARKER_IMAGE_KEY, MARKER_ASSET_FLAG_KEY);
             _nodeImageSource = GetNodeImageSource(Intent);
         }
 
@@ -35,74 +38,49 @@ namespace TaKudanAR.Droid.Activities
             if (_markerImageSource is null) throw new NullReferenceException(nameof(_markerImageSource));
             if (_nodeImageSource is null) throw new NullReferenceException(nameof(_nodeImageSource));
 
-            // Create our trackable with an image
-            var trackable = CreateTrackable("MyMarker", _markerImageSource);
-
             // Get the trackable Manager singleton
-            // 画像トラッカーの 1 つのインスタンスを取得
-            var trackableManager = ARImageTracker.Instance;
-            trackableManager.Initialise();
+            var tracker = ARImageTracker.Instance;
+            tracker.Initialise();
 
             // Add image trackable to the image tracker manager
-            // 画像トラッカブルを画像トラッカーに追加
-            trackableManager.AddTrackable(trackable);
+            using (var trackable = CreateTrackable("MainMarker", _markerImageSource, _nodeImageSource))
+            {
+                tracker.AddTrackable(trackable);
+                trackable.AddListener(this);
+            }
 
-            // Create an image node using an image of the kudan cow
-            // 画像で画像ノードを初期化(ビルドアクションがAndroidAssetのファイル名を指定)
-            var node = CreateARImageNode(_nodeImageSource);
-
-            // imageNode のサイズを Trackable のサイズに合わせる
-            var textureMaterial = (ARTextureMaterial)node.Material;
-            var scale = trackable.Width / textureMaterial.Texture.Width;
-            node.ScaleByUniform(scale);
-
-            // Add the image node as a child of the trackable's world
-            // 画像ノードをトラッカブルのワールド空間の子として追加
-            trackable.World.AddChild(node);
+            // 2個目のマーカーとノードを追加（UI側を実装してないので無効化）
+            //var assetStore = Xamarin.Forms.DependencyService.Get<IAssetStore>();
+            //using (var trackable = CreateTrackable("Marker1", assetStore.MarkerAssets[1], assetStore.NodeAssets[1]))
+            //{
+            //    tracker.AddTrackable(trackable);
+            //    trackable.AddListener(this);
+            //}
 
             // Add listener methods that are defined in the ARImageTrackableListener interface
-            // リスナー登録
-            trackable.AddListener(this);
-
-            _imageTrackable = trackable;
+            foreach (var trackable in tracker.Trackables)
+            {
+                trackable.AddListener(this);
+            }
         }
 
-        private static ARImageTrackable CreateTrackable(string trackableName, IKudanImageSource imageSource)
+        private static ARImageTrackable CreateTrackable(string trackableName, IKudanImageSource markerImage, IKudanImageSource nodeImage)
         {
-            // Create a new trackable instance with a name
-            // 画像トラッカブルを初期化して画像をロード
-            var trackable = new ARImageTrackable(trackableName);
+            // Create our trackable with an image
+            var trackable = markerImage.ToARImageTrackable(trackableName);
 
-            // Load the image for this marker
-            if (imageSource.IsAsset)
-            {
-                trackable.LoadFromAsset(imageSource.Key);
-            }
-            else
-            {
-                trackable.LoadFromPath(imageSource.Key);
-            }
+            // Create an image node using an image of the kudan cow
+            using var nodeTexture = nodeImage.ToARTexture2D();
+            using var imageNode = new ARImageNode(nodeTexture);
+
+            // Node のサイズを Trackable のサイズに合わせる
+            var scale = Math.Min(trackable.Width / (float)nodeTexture.Width, trackable.Height / (float)nodeTexture.Height);
+            imageNode.ScaleByUniform(scale);
+
+            // Add the image node as a child of the trackable's world
+            trackable.World.AddChild(imageNode);
+
             return trackable;
-        }
-
-        private ARImageNode CreateARImageNode(IKudanImageSource imageSource)
-        {
-            var texture = new ARTexture2D();
-            if (imageSource.IsAsset)
-            {
-                texture.LoadFromAsset(imageSource.Key);
-            }
-            else
-            {
-                texture.LoadFromPath(imageSource.Key);
-            }
-            return new ARImageNode(texture);
-        }
-
-        public new void Dispose()
-        {
-            _imageTrackable?.Dispose();
-            base.Dispose();
         }
     }
 }

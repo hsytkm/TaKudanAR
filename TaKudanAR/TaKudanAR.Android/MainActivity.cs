@@ -33,18 +33,29 @@ namespace TaKudanAR.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        public void StartARActivity<TActivity>(IKudanImageSource marker, IKudanImageSource node)
-            where TActivity : ARActivityBase
+        public void StartMarkerARActivity(IKudanImageSource marker, IKudanImageSource node)
         {
-            using var intent = new Intent(this, typeof(TActivity));
+            using var intent = new Intent(this, typeof(MarkerARActivity));
 
-            intent.PutExtra(ARActivityBase.MARKER_IMAGE_KEY, marker.Key);
-            intent.PutExtra(ARActivityBase.MARKER_ASSET_FLAG_KEY, marker.IsAsset);
+            intent.PutExtra(MarkerARActivity.MARKER_IMAGE_KEY, marker.Key);
+            intent.PutExtra(MarkerARActivity.MARKER_ASSET_FLAG_KEY, marker.IsAsset);
 
             intent.PutExtra(ARActivityBase.NODE_IMAGE_KEY, node.Key);
             intent.PutExtra(ARActivityBase.NODE_ASSET_FLAG_KEY, node.IsAsset);
 
             StartActivity(intent);
         }
+
+        public void StartMarkerlessARActivity<TActivity>(IKudanImageSource node)
+            where TActivity : ARActivityBase
+        {
+            using var intent = new Intent(this, typeof(TActivity));
+
+            intent.PutExtra(ARActivityBase.NODE_IMAGE_KEY, node.Key);
+            intent.PutExtra(ARActivityBase.NODE_ASSET_FLAG_KEY, node.IsAsset);
+
+            StartActivity(intent);
+        }
+
     }
 }

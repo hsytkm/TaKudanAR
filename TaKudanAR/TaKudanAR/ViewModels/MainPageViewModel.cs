@@ -21,12 +21,14 @@ namespace TaKudanAR.ViewModels
         public override string Title => "Main";
 
         public ObservableCollection<AssetImageSource> NodeImageSources { get; }
-        public IReactiveProperty<AssetImageSource> SelectedNodeImageSource { get; }
+        public IReactiveProperty<AssetImageSource> SelectedNodeImage { get; }
         public IReadOnlyReactiveProperty<ImageSource?> MarkerImageSource { get; }
 
         public BusyNotifier BusyNotifier { get; } = new();
         public AsyncReactiveCommand TakeMarkerPhotoCommand { get; }
         public AsyncReactiveCommand StartMarkerArCommand { get; }
+        public AsyncReactiveCommand StartMarkerlessArFloorCommand { get; }
+        public AsyncReactiveCommand StartMarkerlessArWallCommand { get; }
 
         public MainPageViewModel()
         {
@@ -38,7 +40,7 @@ namespace TaKudanAR.ViewModels
             NodeImageSources = new ObservableCollection<AssetImageSource>(
                 assetStore!.NodeAssets.Select(x => new AssetImageSource(x, assetStore.GetImageSource(x)!)));
 
-            SelectedNodeImageSource = new ReactivePropertySlim<AssetImageSource>().AddTo(_disposables);
+            SelectedNodeImage = new ReactivePropertySlim<AssetImageSource>().AddTo(_disposables);
 
             MarkerImageSource = markerImageSource.Select(image => ToImageSource(image, assetStore))
                 .ToReadOnlyReactivePropertySlim().AddTo(_disposables);
@@ -55,7 +57,21 @@ namespace TaKudanAR.ViewModels
                 .WithSubscribe(async () =>
                 {
                     using var busyToken = BusyNotifier.ProcessStart();
-                    await kudanARService.StartMarkerARActivityAsync(markerImageSource.Value, SelectedNodeImageSource.Value.KudanImage);
+                    await kudanARService.StartMarkerARActivityAsync(markerImageSource.Value, SelectedNodeImage.Value.KudanImage);
+                }, _disposables.Add);
+
+            StartMarkerlessArFloorCommand = BusyNotifier.Inverse().ToAsyncReactiveCommand()
+                .WithSubscribe(async () =>
+                {
+                    using var busyToken = BusyNotifier.ProcessStart();
+                    await kudanARService.StartMarkerlessARFloorActivityAsync(SelectedNodeImage.Value.KudanImage);
+                }, _disposables.Add);
+
+            StartMarkerlessArWallCommand = BusyNotifier.Inverse().ToAsyncReactiveCommand()
+                .WithSubscribe(async () =>
+                {
+                    using var busyToken = BusyNotifier.ProcessStart();
+                    await kudanARService.StartMarkerlessARWallActivityAsync(SelectedNodeImage.Value.KudanImage);
                 }, _disposables.Add);
 
         }
@@ -67,7 +83,7 @@ namespace TaKudanAR.ViewModels
             if (imagePath is null || !File.Exists(imagePath))
                 return null;
 
-            return KudanImageSource.CreateFile(imagePath);
+            return KudanImageSource.CreateFromFile(imagePath);
         }
 
         private static ImageSource? ToImageSource(IKudanImageSource kudanImage, IAssetStore assetStore) =>

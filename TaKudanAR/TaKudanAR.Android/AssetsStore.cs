@@ -24,27 +24,26 @@ namespace TaKudanAR.Droid
     {
         private readonly static IReadOnlyList<IKudanImageSource> _markerAssets = new[]
         {
-            KudanImageSource.CreateAsset("KudanMarker.jpg"),
-        };
+           "KudanMarker.jpg",
+           "Marker1.jpg",
+        }
+        .Select(x => KudanImageSource.CreateFromAsset(x)).ToArray();
 
         private readonly static IReadOnlyList<IKudanImageSource> _nodeAssets = new[]
         {
-            KudanImageSource.CreateAsset("KudanNode.png"),
-            KudanImageSource.CreateAsset("NodePistols1.png"),
-            KudanImageSource.CreateAsset("NodePistols2.png"),
-            KudanImageSource.CreateAsset("NodePistols3.png"),
-            KudanImageSource.CreateAsset("NodePistols5.png"),
-            KudanImageSource.CreateAsset("NodePistols6.png"),
-            KudanImageSource.CreateAsset("NodePistols7.png"),
-        };
+           "KudanNode.png",
+           "NodePistols1.png", "NodePistols2.png", "NodePistols3.png",
+           "NodePistols5.png", "NodePistols6.png", "NodePistols7.png",
+           "NodeHarvest1.png", "NodeHarvest2.png", "NodeHarvest3.png",
+        }
+        .Select(x => KudanImageSource.CreateFromAsset(x)).ToArray();
 
         public IReadOnlyList<IKudanImageSource> MarkerAssets => _markerAssets;
         public IReadOnlyList<IKudanImageSource> NodeAssets => _nodeAssets;
 
         public ImageSource? GetImageSource(IKudanImageSource source)
         {
-            if (!source.IsAsset)
-                throw new NotImplementedException();
+            if (!source.IsAsset) throw new NotImplementedException();
 
             var assets = MainActivity.Instance?.Assets;
             if (assets is null) return null;

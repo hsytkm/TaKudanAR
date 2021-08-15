@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace TaKudanAR.Interfaces
@@ -9,7 +8,7 @@ namespace TaKudanAR.Interfaces
     {
         //Task Init();
         Task StartMarkerARActivityAsync(IKudanImageSource marker, IKudanImageSource node);
-        //Task StartMarkerlessARActivityAsync(IKudanImageSource marker, IKudanImageSource node);
-        //Task StartMarkerlessWallActivityAsync(IKudanImageSource marker, IKudanImageSource node);
+        Task StartMarkerlessARFloorActivityAsync(IKudanImageSource node);
+        Task StartMarkerlessARWallActivityAsync(IKudanImageSource node);
     }
 }

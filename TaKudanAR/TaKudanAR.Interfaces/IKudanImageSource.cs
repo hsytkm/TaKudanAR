@@ -14,7 +14,7 @@ namespace TaKudanAR.Interfaces
         public string Key { get; }
 
         private KudanImageSource(bool isAsset, string key) => (IsAsset, Key) = (isAsset, key);
-        public static IKudanImageSource CreateAsset(string asset) => new KudanImageSource(true, asset);
-        public static IKudanImageSource CreateFile(string path) => new KudanImageSource(false, path);
+        public static IKudanImageSource CreateFromAsset(string asset) => new KudanImageSource(true, asset);
+        public static IKudanImageSource CreateFromFile(string path) => new KudanImageSource(false, path);
     }
 }

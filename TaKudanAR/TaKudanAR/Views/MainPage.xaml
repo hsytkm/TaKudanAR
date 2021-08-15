@@ -14,6 +14,7 @@
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="{StaticResource Primary}" />
             <Setter Property="TextColor" Value="White" />
+            <Setter Property="HeightRequest" Value="60" />
         </Style>
     </ContentPage.Resources>
 
@@ -25,22 +26,22 @@
         </Grid.RowDefinitions>
 
         <StackLayout
-            Padding="30,20"
+            Padding="20,10"
             Orientation="Vertical"
             Spacing="10">
 
-            <Label FontSize="Title" Text="KudanAR Sample" />
+            <Label FontSize="Title" Text="KudanAR Demo" />
 
             <!--<Label
                 Padding="0,0,0,0"
                 FontSize="16"
                 Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" />-->
 
-            <Label Padding="0,10" FontSize="Large">
+            <Label Padding="10,5" FontSize="Large">
                 <Label.FormattedText>
                     <FormattedString>
                         <FormattedString.Spans>
-                            <Span FontAttributes="Bold" Text="https://github.com/hsytkm/XFKudanARDemo" />
+                            <Span FontAttributes="Bold" Text="https://github.com/hsytkm/TaKudanAR" />
                         </FormattedString.Spans>
                     </FormattedString>
                 </Label.FormattedText>
@@ -57,7 +58,7 @@
                     Text="Select Node Image" />
 
                 <CarouselView
-                    CurrentItem="{Binding SelectedNodeImageSource.Value, Mode=TwoWay}"
+                    CurrentItem="{Binding SelectedNodeImage.Value, Mode=TwoWay}"
                     IndicatorView="indicatorView"
                     ItemsSource="{Binding NodeImageSources, Mode=OneTime}">
                     <CarouselView.ItemTemplate>
@@ -77,15 +78,15 @@
 
             <StackLayout Grid.Column="1">
                 <Button Command="{Binding TakeMarkerPhotoCommand, Mode=OneTime}" Text="Take marker photo" />
-                <Image Source="{Binding MarkerImageSource.Value}" VerticalOptions="CenterAndExpand" />
+                <Image Source="{Binding MarkerImageSource.Value, Mode=OneWay}" VerticalOptions="CenterAndExpand" />
             </StackLayout>
         </Grid>
 
-        <Button
-            Grid.Row="2"
-            Command="{Binding StartMarkerArCommand, Mode=OneTime}"
-            HeightRequest="60"
-            Text="Start Marker AR" />
+        <StackLayout Grid.Row="2">
+            <Button Command="{Binding StartMarkerArCommand, Mode=OneTime}" Text="Start Marker AR" />
+            <Button Command="{Binding StartMarkerlessArFloorCommand, Mode=OneTime}" Text="Start Markerless AR Floor" />
+            <!--<Button Command="{Binding StartMarkerlessArWallCommand, Mode=OneTime}" Text="Start Markerless AR Wall" />-->
+        </StackLayout>
     </Grid>
 
 </ContentPage>
