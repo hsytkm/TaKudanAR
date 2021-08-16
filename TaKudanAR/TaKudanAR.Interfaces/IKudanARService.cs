@@ -8,7 +8,7 @@ namespace TaKudanAR.Interfaces
     {
         //Task Init();
         Task StartMarkerARActivityAsync(IKudanImageSource marker, IKudanImageSource node);
-        Task StartMarkerlessARFloorActivityAsync(IKudanImageSource node);
-        Task StartMarkerlessARWallActivityAsync(IKudanImageSource node);
+        Task StartMarkerlessARFloorActivityAsync(IKudanImageSource target, IKudanImageSource tracking);
+        Task StartMarkerlessARWallActivityAsync(IKudanImageSource target, IKudanImageSource tracking);
     }
 }

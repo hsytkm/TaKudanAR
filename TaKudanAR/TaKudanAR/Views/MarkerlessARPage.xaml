@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TaKudanAR.Views.MarkerlessARPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TaKudanAR.ViewModels"
+    Title="{Binding Title, Mode=OneTime}">
+
+    <ContentPage.BindingContext>
+        <vm:MarkerlessARPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <StackLayout
+            Padding="20,10,20,0"
+            Orientation="Vertical"
+            Spacing="10">
+            <Label FontSize="Small" Text="Tracking 画像を複数設定してみたいけど、実装方法を調べられていない。 実現できるかどうかから分かっていない…" />
+        </StackLayout>
+
+        <StackLayout Grid.Row="1" Margin="0,20">
+            <Button Command="{Binding StartMarkerlessArFloorCommand, Mode=OneTime}" Text="Start Markerless AR (Floor)" />
+
+            <!--  Command="{Binding StartMarkerlessArWallCommand, Mode=OneTime}"  -->
+            <Button Margin="0,10" Text="Start Markerless AR (Wall) Not implemented" />
+        </StackLayout>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*">
+            <StackLayout>
+                <Label
+                    FontSize="Medium"
+                    HorizontalOptions="Center"
+                    Text="Target Image" />
+                <Image Source="{Binding TargetImageSource, Mode=OneTime}" VerticalOptions="CenterAndExpand" />
+            </StackLayout>
+
+            <StackLayout Grid.Column="1">
+                <Label
+                    FontSize="Medium"
+                    HorizontalOptions="Center"
+                    Text="Tracking Image" />
+                <Image Source="{Binding TrackingImageSource, Mode=OneTime}" VerticalOptions="CenterAndExpand" />
+            </StackLayout>
+        </Grid>
+
+    </Grid>
+</ContentPage>

@@ -39,20 +39,21 @@ namespace TaKudanAR.Droid
 
             intent.PutExtra(MarkerARActivity.MARKER_IMAGE_KEY, marker.Key);
             intent.PutExtra(MarkerARActivity.MARKER_ASSET_FLAG_KEY, marker.IsAsset);
-
-            intent.PutExtra(ARActivityBase.NODE_IMAGE_KEY, node.Key);
-            intent.PutExtra(ARActivityBase.NODE_ASSET_FLAG_KEY, node.IsAsset);
+            intent.PutExtra(MarkerARActivity.NODE_IMAGE_KEY, node.Key);
+            intent.PutExtra(MarkerARActivity.NODE_ASSET_FLAG_KEY, node.IsAsset);
 
             StartActivity(intent);
         }
 
-        public void StartMarkerlessARActivity<TActivity>(IKudanImageSource node)
+        public void StartMarkerlessARActivity<TActivity>(IKudanImageSource target, IKudanImageSource tracking)
             where TActivity : ARActivityBase
         {
             using var intent = new Intent(this, typeof(TActivity));
 
-            intent.PutExtra(ARActivityBase.NODE_IMAGE_KEY, node.Key);
-            intent.PutExtra(ARActivityBase.NODE_ASSET_FLAG_KEY, node.IsAsset);
+            intent.PutExtra(MarkerlessARActivityBase.TARGET_IMAGE_KEY, target.Key);
+            intent.PutExtra(MarkerlessARActivityBase.TARGET_ASSET_FLAG_KEY, target.IsAsset);
+            intent.PutExtra(MarkerlessARActivityBase.TRACKING_IMAGE_KEY, tracking.Key);
+            intent.PutExtra(MarkerlessARActivityBase.TRACKING_ASSET_FLAG_KEY, tracking.IsAsset);
 
             StartActivity(intent);
         }

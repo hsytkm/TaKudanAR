@@ -17,7 +17,7 @@ using TaKudanAR.Models;
 namespace TaKudanAR.Droid.Activities
 {
     [Activity(Label = "MarkerlessAR(Floor)")]
-    public class MarkerlessARFloorActivity : ARActivityBase, GestureDetector.IOnGestureListener
+    public class MarkerlessARFloorActivity : MarkerlessARActivityBase, GestureDetector.IOnGestureListener
     {
         private GestureDetectorCompat? _gestureDetect;
 
@@ -27,6 +27,9 @@ namespace TaKudanAR.Droid.Activities
 
             ARAPIKey.Instance.SetAPIKey(KudanLicense.Key);
 
+            _targetImageSource = GetKudanImageSource(Intent, TARGET_IMAGE_KEY, TARGET_ASSET_FLAG_KEY);
+            _trackingImageSource = GetKudanImageSource(Intent, TRACKING_IMAGE_KEY, TRACKING_ASSET_FLAG_KEY);
+
             // Create gesture recogniser to start and stop arbitrack
             _gestureDetect = new GestureDetectorCompat(this, this);
         }
@@ -35,34 +38,33 @@ namespace TaKudanAR.Droid.Activities
         {
             base.Setup();
 
-            //if (_nodeImageSource is null) throw new NullReferenceException(nameof(_nodeImageSource));
+            _ = _targetImageSource ?? throw new NullReferenceException(nameof(_targetImageSource));
+            _ = _trackingImageSource ?? throw new NullReferenceException(nameof(_trackingImageSource));
 
             var assetStore = Xamarin.Forms.DependencyService.Get<IAssetStore>();
-            var targetNode = assetStore.NodeAssets[7];
-            var trackingNode = assetStore.NodeAssets[8];
 
             // We choose the orientation of our floor node so that the target node lies flat on the floor.
             // We rotate the node by -90 degrees about the x axis.
-            var angles = new[] { -(float)Math.PI / 2.0f, 0.0f, 0.0f };
+            var angles = new[] { -(float)Math.PI / 2f, 0f, 0f };
             using var floorOrientation = new Quaternion(angles);
 
             // Create a target node. A target node is a node whose position is used
             // to determine the initial position of arbitrack's world when arbitrack is started.
             // The target node in this case is an image node of the Kudan Cow.
             using var floorScale = new Vector3f(0.5f, 0.5f, 0.5f);
-            using var floorTarget = CreateImageNode(targetNode, floorOrientation, floorScale);
+            using var floorTargetNode = CreateImageNode(_targetImageSource, floorOrientation, floorScale);
 
             // Add our target node to the gyroplacemanager's world.
             // The position of the target node is used to determine the initial position of arbitrack's world.
-            AddNodeToGyroPlaceManager(floorTarget);
+            AddNodeToGyroPlaceManager(floorTargetNode);
 
             // Create an image node to place in arbitrack's world.
             // We can choose the tracking node to have the same orientation as the target node.
-            using var trackingScale = new Vector3f(1.0f, 1.0f, 1.0f);
-            using var trackingImageNode = CreateImageNode(trackingNode, floorOrientation, trackingScale);
+            var trackingScale = Vector3f.UnitXyz;   // =(1f, 1f, 1f);
+            using var trackingImageNode = CreateImageNode(_trackingImageSource, floorOrientation, trackingScale);
 
             // Set up arbitrack.
-            SetUpArbiTrack(floorTarget, trackingImageNode);
+            SetUpArbiTrack(floorTargetNode, trackingImageNode);
         }
 
         private static ARImageNode CreateImageNode(IKudanImageSource nodeImage, Quaternion orientation, Vector3f scale)
@@ -97,13 +99,11 @@ namespace TaKudanAR.Droid.Activities
             arbiTrack.World.AddChild(childNode);
         }
 
-        //public override bool OnTouchEvent(MotionEvent? e)
-        //{
-        //    var isConsumeEvent = false;
-        //    isConsumeEvent |= _gestureDetect?.OnTouchEvent(e) ?? false;
-        //    isConsumeEvent |= base.OnTouchEvent(e);
-        //    return isConsumeEvent;
-        //}
+        public override bool OnTouchEvent(MotionEvent? e)
+        {
+            _ = _gestureDetect?.OnTouchEvent(e);
+            return base.OnTouchEvent(e);
+        }
 
         #region GestureDetector.IOnGestureListener
         public bool OnDown(MotionEvent? e) => true;
@@ -122,13 +122,13 @@ namespace TaKudanAR.Droid.Activities
 
             if (arbiTrack.IsTracking)
             {
-                // ArbiTrack がトラッキング中の場合は、トラッキングを停止してワールド空間がレンダリングされないようにし、ターゲット ノードを表示
+                // トラッキングを停止して TargetNode を再表示
                 arbiTrack.Stop();
                 arbiTrack.TargetNode.Visible = true;
             }
             else
             {
-                // トラッキング中でない場合は、トラッキングを開始してターゲット ノードを非表示にする
+                // トラッキングを開始して TargetNode を非表示
                 arbiTrack.Start();
                 arbiTrack.TargetNode.Visible = false;
             }

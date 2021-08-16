@@ -5,9 +5,9 @@ using Xamarin.Forms.Xaml;
 
 namespace TaKudanAR.Views
 {
-    public partial class MainPage : ContentPage
+    public partial class MarkerARPage : ContentPage
     {
-        public MainPage()
+        public MarkerARPage()
         {
             InitializeComponent();
         }

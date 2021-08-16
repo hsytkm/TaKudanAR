@@ -39,22 +39,22 @@ namespace TaKudanAR.Droid
             MainActivity.Instance?.StartMarkerARActivity(marker, node);
         }
 
-        public async Task StartMarkerlessARFloorActivityAsync(IKudanImageSource node)
+        public async Task StartMarkerlessARFloorActivityAsync(IKudanImageSource target, IKudanImageSource tracking)
         {
             var isGranted = await Smapho.CheckAndRequestPermissionsAsync(_kudanARPermissions);
             if (!isGranted)
                 return;
 
-            MainActivity.Instance?.StartMarkerlessARActivity<MarkerlessARFloorActivity>(node);
+            MainActivity.Instance?.StartMarkerlessARActivity<MarkerlessARFloorActivity>(target, tracking);
         }
 
-        public async Task StartMarkerlessARWallActivityAsync(IKudanImageSource node)
+        public async Task StartMarkerlessARWallActivityAsync(IKudanImageSource target, IKudanImageSource tracking)
         {
             var isGranted = await Smapho.CheckAndRequestPermissionsAsync(_kudanARPermissions);
             if (!isGranted)
                 return;
 
-            MainActivity.Instance?.StartMarkerlessARActivity<MarkerlessARWallActivity>(node);
+            MainActivity.Instance?.StartMarkerlessARActivity<MarkerlessARWallActivity>(target, tracking);
         }
 
     }

@@ -17,7 +17,7 @@ using TaKudanAR.Models;
 namespace TaKudanAR.Droid.Activities
 {
     [Activity(Label = "MarkerlessAR(Wall)")]
-    public class MarkerlessARWallActivity : ARActivityBase //, GestureDetector.IOnGestureListener
+    public class MarkerlessARWallActivity : MarkerlessARActivityBase //, GestureDetector.IOnGestureListener
     {
 #if false
         private GestureDetectorCompat? _gestureDetect;

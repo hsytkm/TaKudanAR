@@ -19,7 +19,11 @@ namespace TaKudanAR.Droid.Activities
     {
         internal const string MARKER_IMAGE_KEY = nameof(MARKER_IMAGE_KEY);
         internal const string MARKER_ASSET_FLAG_KEY = nameof(MARKER_ASSET_FLAG_KEY);
+        internal const string NODE_IMAGE_KEY = nameof(NODE_IMAGE_KEY);
+        internal const string NODE_ASSET_FLAG_KEY = nameof(NODE_ASSET_FLAG_KEY);
+
         private IKudanImageSource? _markerImageSource;
+        private IKudanImageSource? _nodeImageSource;
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
@@ -28,15 +32,15 @@ namespace TaKudanAR.Droid.Activities
             ARAPIKey.Instance.SetAPIKey(KudanLicense.Key);
 
             _markerImageSource = GetKudanImageSource(Intent, MARKER_IMAGE_KEY, MARKER_ASSET_FLAG_KEY);
-            _nodeImageSource = GetNodeImageSource(Intent);
+            _nodeImageSource = GetKudanImageSource(Intent, NODE_IMAGE_KEY, NODE_ASSET_FLAG_KEY);
         }
 
         public override void Setup()
         {
             base.Setup();
 
-            if (_markerImageSource is null) throw new NullReferenceException(nameof(_markerImageSource));
-            if (_nodeImageSource is null) throw new NullReferenceException(nameof(_nodeImageSource));
+            _ = _markerImageSource ?? throw new NullReferenceException(nameof(_markerImageSource));
+            _ = _nodeImageSource ?? throw new NullReferenceException(nameof(_nodeImageSource));
 
             // Get the trackable Manager singleton
             var tracker = ARImageTracker.Instance;

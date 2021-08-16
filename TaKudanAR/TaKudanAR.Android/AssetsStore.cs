@@ -41,6 +41,12 @@ namespace TaKudanAR.Droid
         public IReadOnlyList<IKudanImageSource> MarkerAssets => _markerAssets;
         public IReadOnlyList<IKudanImageSource> NodeAssets => _nodeAssets;
 
+        private readonly static IKudanImageSource _markerlessTargetNode = KudanImageSource.CreateFromAsset("NodeHarvest1bw.png");
+        public IKudanImageSource MarkerlessTargetNodeAsset => _markerlessTargetNode;
+
+        private readonly static IKudanImageSource _markerlessTrackingNode = KudanImageSource.CreateFromAsset("NodeHarvest1.png");
+        public IKudanImageSource MarkerlessTrackingNodeAsset => _markerlessTrackingNode;
+
         public ImageSource? GetImageSource(IKudanImageSource source)
         {
             if (!source.IsAsset) throw new NotImplementedException();

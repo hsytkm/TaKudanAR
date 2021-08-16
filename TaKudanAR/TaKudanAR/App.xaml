@@ -9,8 +9,11 @@
     <Application.Resources>
         <ResourceDictionary>
             <Color x:Key="Primary">#2196F3</Color>
+
             <Style TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource Primary}" />
                 <Setter Property="TextColor" Value="White" />
+                <Setter Property="HeightRequest" Value="60" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -28,6 +31,7 @@
                     </VisualStateGroupList>
                 </Setter>
             </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

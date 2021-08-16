@@ -1,28 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="TaKudanAR.Views.MainPage"
+    x:Class="TaKudanAR.Views.MarkerARPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:TaKudanAR.ViewModels"
     Title="{Binding Title, Mode=OneTime}">
 
     <ContentPage.BindingContext>
-        <vm:MainPageViewModel />
+        <vm:MarkerARPageViewModel />
     </ContentPage.BindingContext>
-
-    <ContentPage.Resources>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="{StaticResource Primary}" />
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="HeightRequest" Value="60" />
-        </Style>
-    </ContentPage.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackLayout
@@ -30,14 +22,14 @@
             Orientation="Vertical"
             Spacing="10">
 
-            <Label FontSize="Title" Text="KudanAR Demo" />
+            <Label FontSize="Small" Text="マーカーは複数設定できる。2個で試してもフレーム落ちしてる雰囲気はなかった。" />
 
             <!--<Label
                 Padding="0,0,0,0"
                 FontSize="16"
                 Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" />-->
 
-            <Label Padding="10,5" FontSize="Large">
+            <!--<Label Padding="10,5" FontSize="Large">
                 <Label.FormattedText>
                     <FormattedString>
                         <FormattedString.Spans>
@@ -45,10 +37,16 @@
                         </FormattedString.Spans>
                     </FormattedString>
                 </Label.FormattedText>
-            </Label>
+            </Label>-->
         </StackLayout>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,*">
+        <Button
+            Grid.Row="1"
+            Margin="0,0,0,10"
+            Command="{Binding StartMarkerArCommand, Mode=OneTime}"
+            Text="Start Marker AR" />
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*">
             <StackLayout>
                 <Label
                     Margin="0,10,0,0"
@@ -82,11 +80,6 @@
             </StackLayout>
         </Grid>
 
-        <StackLayout Grid.Row="2">
-            <Button Command="{Binding StartMarkerArCommand, Mode=OneTime}" Text="Start Marker AR" />
-            <Button Command="{Binding StartMarkerlessArFloorCommand, Mode=OneTime}" Text="Start Markerless AR Floor" />
-            <!--<Button Command="{Binding StartMarkerlessArWallCommand, Mode=OneTime}" Text="Start Markerless AR Wall" />-->
-        </StackLayout>
     </Grid>
 
 </ContentPage>

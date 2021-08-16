@@ -14,11 +14,6 @@ namespace TaKudanAR.Droid.Activities
 {
     public abstract class ARActivityBase : ARActivity, IARImageTrackableListener
     {
-        internal const string NODE_IMAGE_KEY = nameof(NODE_IMAGE_KEY);
-        internal const string NODE_ASSET_FLAG_KEY = nameof(NODE_ASSET_FLAG_KEY);
-
-        protected IKudanImageSource? _nodeImageSource;
-
         protected static IKudanImageSource? GetKudanImageSource(Intent? intent, string imageKey, string assetFlagKey)
         {
             if (intent is null) return null;
@@ -31,9 +26,6 @@ namespace TaKudanAR.Droid.Activities
                 : KudanImageSource.CreateFromFile(image);
         }
 
-        protected static IKudanImageSource? GetNodeImageSource(Intent? intent) =>
-            GetKudanImageSource(intent, NODE_IMAGE_KEY, NODE_ASSET_FLAG_KEY);
-
         public void DidDetect(ARImageTrackable? p0) =>
             System.Diagnostics.Debug.WriteLine($"Did Detect : {p0?.Name}");
 
@@ -42,5 +34,16 @@ namespace TaKudanAR.Droid.Activities
 
         public void DidTrack(ARImageTrackable? p0) =>
             System.Diagnostics.Debug.WriteLine($"Did Track : {p0?.Name}");
+    }
+
+    public abstract class MarkerlessARActivityBase : ARActivityBase
+    {
+        internal const string TARGET_IMAGE_KEY = nameof(TARGET_IMAGE_KEY);
+        internal const string TARGET_ASSET_FLAG_KEY = nameof(TARGET_ASSET_FLAG_KEY);
+        internal const string TRACKING_IMAGE_KEY = nameof(TRACKING_IMAGE_KEY);
+        internal const string TRACKING_ASSET_FLAG_KEY = nameof(TRACKING_ASSET_FLAG_KEY);
+
+        protected IKudanImageSource? _targetImageSource;
+        protected IKudanImageSource? _trackingImageSource;
     }
 }

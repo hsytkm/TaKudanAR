@@ -7,6 +7,10 @@ namespace TaKudanAR.Interfaces
     {
         IReadOnlyList<IKudanImageSource> MarkerAssets { get; }
         IReadOnlyList<IKudanImageSource> NodeAssets { get; }
+
+        IKudanImageSource MarkerlessTargetNodeAsset { get; }
+        IKudanImageSource MarkerlessTrackingNodeAsset { get; }
+
         Xamarin.Forms.ImageSource? GetImageSource(IKudanImageSource source);
 
     }

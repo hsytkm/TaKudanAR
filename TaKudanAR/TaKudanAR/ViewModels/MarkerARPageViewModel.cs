@@ -16,9 +16,9 @@ using Xamarin.Forms;
 
 namespace TaKudanAR.ViewModels
 {
-    public class MainPageViewModel : ViewModelBase
+    public class MarkerARPageViewModel : ViewModelBase
     {
-        public override string Title => "Main";
+        public override string Title => "MarkerAR";
 
         public ObservableCollection<AssetImageSource> NodeImageSources { get; }
         public IReactiveProperty<AssetImageSource> SelectedNodeImage { get; }
@@ -27,10 +27,8 @@ namespace TaKudanAR.ViewModels
         public BusyNotifier BusyNotifier { get; } = new();
         public AsyncReactiveCommand TakeMarkerPhotoCommand { get; }
         public AsyncReactiveCommand StartMarkerArCommand { get; }
-        public AsyncReactiveCommand StartMarkerlessArFloorCommand { get; }
-        public AsyncReactiveCommand StartMarkerlessArWallCommand { get; }
 
-        public MainPageViewModel()
+        public MarkerARPageViewModel()
         {
             var assetStore = Xamarin.Forms.DependencyService.Get<IAssetStore>();
             var kudanARService = Xamarin.Forms.DependencyService.Get<IKudanARService>();
@@ -59,21 +57,6 @@ namespace TaKudanAR.ViewModels
                     using var busyToken = BusyNotifier.ProcessStart();
                     await kudanARService.StartMarkerARActivityAsync(markerImageSource.Value, SelectedNodeImage.Value.KudanImage);
                 }, _disposables.Add);
-
-            StartMarkerlessArFloorCommand = BusyNotifier.Inverse().ToAsyncReactiveCommand()
-                .WithSubscribe(async () =>
-                {
-                    using var busyToken = BusyNotifier.ProcessStart();
-                    await kudanARService.StartMarkerlessARFloorActivityAsync(SelectedNodeImage.Value.KudanImage);
-                }, _disposables.Add);
-
-            StartMarkerlessArWallCommand = BusyNotifier.Inverse().ToAsyncReactiveCommand()
-                .WithSubscribe(async () =>
-                {
-                    using var busyToken = BusyNotifier.ProcessStart();
-                    await kudanARService.StartMarkerlessARWallActivityAsync(SelectedNodeImage.Value.KudanImage);
-                }, _disposables.Add);
-
         }
 
         private static async Task<IKudanImageSource?> TakePhotoAsync()
