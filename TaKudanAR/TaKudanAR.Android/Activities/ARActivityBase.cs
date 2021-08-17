@@ -12,7 +12,7 @@ using TaKudanAR.Models;
 
 namespace TaKudanAR.Droid.Activities
 {
-    public abstract class ARActivityBase : ARActivity, IARImageTrackableListener
+    public abstract class ARActivityBase : ARActivity
     {
         protected static IKudanImageSource? GetKudanImageSource(Intent? intent, string imageKey, string assetFlagKey)
         {
@@ -25,7 +25,10 @@ namespace TaKudanAR.Droid.Activities
                 ? KudanImageSource.CreateFromAsset(image)
                 : KudanImageSource.CreateFromFile(image);
         }
+    }
 
+    public abstract class MarkerARActivityBase : ARActivityBase, IARImageTrackableListener
+    {
         public void DidDetect(ARImageTrackable? p0) =>
             System.Diagnostics.Debug.WriteLine($"Did Detect : {p0?.Name}");
 

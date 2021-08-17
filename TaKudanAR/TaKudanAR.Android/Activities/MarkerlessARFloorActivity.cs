@@ -86,7 +86,7 @@ namespace TaKudanAR.Droid.Activities
             gyroPlaceManager.World.AddChild(node);
         }
 
-        private static void SetUpArbiTrack(ARNode targetNode, ARNode childNode)
+        private void SetUpArbiTrack(ARNode targetNode, ARNode childNode)
         {
             // Get the arbitrack manager and initialise it.
             var arbiTrack = ARArbiTrack.Instance;
@@ -97,6 +97,9 @@ namespace TaKudanAR.Droid.Activities
 
             // Add the tracking image node to the arbitrack world.
             arbiTrack.World.AddChild(childNode);
+
+            // Add this activity as a listener of arbitrack
+            //arbiTrack.AddListener(this);
         }
 
         public override bool OnTouchEvent(MotionEvent? e)

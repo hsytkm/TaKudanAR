@@ -15,7 +15,7 @@ using TaKudanAR.Models;
 namespace TaKudanAR.Droid.Activities
 {
     [Activity(Label = "MarkerAR")]
-    public class MarkerARActivity : ARActivityBase
+    public class MarkerARActivity : MarkerARActivityBase
     {
         internal const string MARKER_IMAGE_KEY = nameof(MARKER_IMAGE_KEY);
         internal const string MARKER_ASSET_FLAG_KEY = nameof(MARKER_ASSET_FLAG_KEY);
